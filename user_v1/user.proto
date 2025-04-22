@@ -1,0 +1,62 @@
+syntax = "proto3";
+
+package user_v1;
+
+option go_package = "protos/user_v1/user.proto;user_v1";
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+
+service UserV1 {
+  rpc GetProfile(GetProfileRequest) returns (GetProfileResponse);
+  rpc UpdateProfile(UpdateProfileRequest) returns (UpdateProfileResponse);
+  rpc GetSettings(GetSettingsRequest) returns (GetSettingsResponse);
+  rpc GetSubscriptions(GetSubscriptionsRequest) returns (GetSubscriptionsResponse);
+}
+
+message UserProfile {
+  string name = 1;
+  string email = 2;
+  string avatar_path = 3;
+  string bio = 4;
+  int32 experience_level = 5;
+  bool is_verified = 6;
+  bool is_public = 7;
+  google.protobuf.Timestamp created_at = 8;
+}
+message GetProfileRequest {
+   string id = 1;
+}
+message GetProfileResponse {
+  UserProfile profile = 1;
+}
+
+message UpdateProfile {
+  string id = 1;
+  google.protobuf.StringValue name = 2;
+  google.protobuf.StringValue email = 3;
+  google.protobuf.StringValue bio = 4;
+  google.protobuf.StringValue avatar_path = 5;
+  google.protobuf.BoolValue is_public = 6;
+}
+message UpdateProfileRequest {
+  UpdateProfile info = 1;
+}
+message UpdateProfileResponse {
+    UserProfile profile = 1;
+}
+
+
+message SubscriptionUser {
+  string id = 1;
+  string name = 2;
+  string avatar_path = 3;
+}
+message GetSubscriptionsRequest {
+  string id = 1;
+}
+message GetSubscriptionsResponse {
+  repeated SubscriptionUser followers = 1;
+  repeated SubscriptionUser subscribers = 2;
+}
