@@ -4,7 +4,6 @@ package user_v1;
 
 option go_package = "protos/user_v1/user.proto;user_v1";
 
-import "google/protobuf/empty.proto";
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/wrappers.proto";
 
@@ -59,4 +58,23 @@ message GetSubscriptionsRequest {
 message GetSubscriptionsResponse {
   repeated SubscriptionUser followers = 1;
   repeated SubscriptionUser subscribers = 2;
+}
+
+enum Language {
+  RU = 0;
+  ENG = 1;
+}
+enum Availability {
+  PUBLIC = 0;
+  PRIVATE = 1;
+}
+message AccountSettings {
+  Language language = 1;
+  Availability  availability = 2;
+}
+message GetSettingsRequest {
+  string id = 1;
+}
+message GetSettingsResponse {
+  AccountSettings settings = 1;
 }
