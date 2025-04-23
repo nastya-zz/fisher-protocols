@@ -60,7 +60,6 @@ message GetSubscriptionsResponse {
   repeated SubscriptionUser subscribers = 2;
 }
 
-
 enum Language {
   RU = 0;
   ENG = 1;
