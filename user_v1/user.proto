@@ -23,6 +23,7 @@ message UserProfile {
   bool is_verified = 6;
   bool is_public = 7;
   google.protobuf.Timestamp created_at = 8;
+  string id = 9;
 }
 message GetProfileRequest {
    string id = 1;
