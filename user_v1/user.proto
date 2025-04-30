@@ -11,6 +11,8 @@ service UserV1 {
   rpc GetProfile(GetProfileRequest) returns (GetProfileResponse);
   rpc UpdateProfile(UpdateProfileRequest) returns (UpdateProfileResponse);
   rpc GetSettings(GetSettingsRequest) returns (GetSettingsResponse);
+  rpc UpdateSettings(UpdateSettingsRequest) returns (UpdateSettingsResponse);
+  rpc ResetSettings(ResetSettingsRequest) returns (ResetSettingsResponse);
   rpc GetSubscriptions(GetSubscriptionsRequest) returns (GetSubscriptionsResponse);
 }
 
@@ -44,7 +46,7 @@ message UpdateProfileRequest {
   UpdateProfile info = 1;
 }
 message UpdateProfileResponse {
-    UserProfile profile = 1;
+  UserProfile profile = 1;
 }
 
 
@@ -77,5 +79,18 @@ message GetSettingsRequest {
   string id = 1;
 }
 message GetSettingsResponse {
+  AccountSettings settings = 1;
+}
+message UpdateSettingsRequest {
+  string user_id = 1;
+  AccountSettings settings_info = 2;
+}
+message UpdateSettingsResponse {
+  AccountSettings settings = 1;
+}
+message ResetSettingsRequest {
+  string user_id = 1;
+}
+message ResetSettingsResponse {
   AccountSettings settings = 1;
 }

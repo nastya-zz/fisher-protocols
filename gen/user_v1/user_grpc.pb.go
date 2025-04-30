@@ -25,6 +25,8 @@ type UserV1Client interface {
 	GetProfile(ctx context.Context, in *GetProfileRequest, opts ...grpc.CallOption) (*GetProfileResponse, error)
 	UpdateProfile(ctx context.Context, in *UpdateProfileRequest, opts ...grpc.CallOption) (*UpdateProfileResponse, error)
 	GetSettings(ctx context.Context, in *GetSettingsRequest, opts ...grpc.CallOption) (*GetSettingsResponse, error)
+	UpdateSettings(ctx context.Context, in *UpdateSettingsRequest, opts ...grpc.CallOption) (*UpdateSettingsResponse, error)
+	ResetSettings(ctx context.Context, in *ResetSettingsRequest, opts ...grpc.CallOption) (*ResetSettingsResponse, error)
 	GetSubscriptions(ctx context.Context, in *GetSubscriptionsRequest, opts ...grpc.CallOption) (*GetSubscriptionsResponse, error)
 }
 
@@ -63,6 +65,24 @@ func (c *userV1Client) GetSettings(ctx context.Context, in *GetSettingsRequest, 
 	return out, nil
 }
 
+func (c *userV1Client) UpdateSettings(ctx context.Context, in *UpdateSettingsRequest, opts ...grpc.CallOption) (*UpdateSettingsResponse, error) {
+	out := new(UpdateSettingsResponse)
+	err := c.cc.Invoke(ctx, "/user_v1.UserV1/UpdateSettings", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userV1Client) ResetSettings(ctx context.Context, in *ResetSettingsRequest, opts ...grpc.CallOption) (*ResetSettingsResponse, error) {
+	out := new(ResetSettingsResponse)
+	err := c.cc.Invoke(ctx, "/user_v1.UserV1/ResetSettings", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *userV1Client) GetSubscriptions(ctx context.Context, in *GetSubscriptionsRequest, opts ...grpc.CallOption) (*GetSubscriptionsResponse, error) {
 	out := new(GetSubscriptionsResponse)
 	err := c.cc.Invoke(ctx, "/user_v1.UserV1/GetSubscriptions", in, out, opts...)
@@ -79,6 +99,8 @@ type UserV1Server interface {
 	GetProfile(context.Context, *GetProfileRequest) (*GetProfileResponse, error)
 	UpdateProfile(context.Context, *UpdateProfileRequest) (*UpdateProfileResponse, error)
 	GetSettings(context.Context, *GetSettingsRequest) (*GetSettingsResponse, error)
+	UpdateSettings(context.Context, *UpdateSettingsRequest) (*UpdateSettingsResponse, error)
+	ResetSettings(context.Context, *ResetSettingsRequest) (*ResetSettingsResponse, error)
 	GetSubscriptions(context.Context, *GetSubscriptionsRequest) (*GetSubscriptionsResponse, error)
 	mustEmbedUnimplementedUserV1Server()
 }
@@ -95,6 +117,12 @@ func (UnimplementedUserV1Server) UpdateProfile(context.Context, *UpdateProfileRe
 }
 func (UnimplementedUserV1Server) GetSettings(context.Context, *GetSettingsRequest) (*GetSettingsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetSettings not implemented")
+}
+func (UnimplementedUserV1Server) UpdateSettings(context.Context, *UpdateSettingsRequest) (*UpdateSettingsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateSettings not implemented")
+}
+func (UnimplementedUserV1Server) ResetSettings(context.Context, *ResetSettingsRequest) (*ResetSettingsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ResetSettings not implemented")
 }
 func (UnimplementedUserV1Server) GetSubscriptions(context.Context, *GetSubscriptionsRequest) (*GetSubscriptionsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetSubscriptions not implemented")
@@ -166,6 +194,42 @@ func _UserV1_GetSettings_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserV1_UpdateSettings_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateSettingsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserV1Server).UpdateSettings(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user_v1.UserV1/UpdateSettings",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserV1Server).UpdateSettings(ctx, req.(*UpdateSettingsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserV1_ResetSettings_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ResetSettingsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserV1Server).ResetSettings(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user_v1.UserV1/ResetSettings",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserV1Server).ResetSettings(ctx, req.(*ResetSettingsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _UserV1_GetSubscriptions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetSubscriptionsRequest)
 	if err := dec(in); err != nil {
@@ -202,6 +266,14 @@ var UserV1_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetSettings",
 			Handler:    _UserV1_GetSettings_Handler,
+		},
+		{
+			MethodName: "UpdateSettings",
+			Handler:    _UserV1_UpdateSettings_Handler,
+		},
+		{
+			MethodName: "ResetSettings",
+			Handler:    _UserV1_ResetSettings_Handler,
 		},
 		{
 			MethodName: "GetSubscriptions",
