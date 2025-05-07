@@ -6,6 +6,8 @@ option go_package = "protos/user_v1/user.proto;user_v1";
 
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/wrappers.proto";
+import "google/protobuf/empty.proto";
+
 
 service UserV1 {
   rpc GetProfile(GetProfileRequest) returns (GetProfileResponse);
@@ -14,6 +16,9 @@ service UserV1 {
   rpc UpdateSettings(UpdateSettingsRequest) returns (UpdateSettingsResponse);
   rpc ResetSettings(ResetSettingsRequest) returns (ResetSettingsResponse);
   rpc GetSubscriptions(GetSubscriptionsRequest) returns (GetSubscriptionsResponse);
+  rpc Subscribe(SubscribeRequest) returns (google.protobuf.Empty);
+  rpc UnSubscribe(SubscribeRequest) returns (google.protobuf.Empty);
+
 }
 
 message UserProfile {
@@ -59,8 +64,13 @@ message GetSubscriptionsRequest {
   string id = 1;
 }
 message GetSubscriptionsResponse {
-  repeated SubscriptionUser followers = 1;
+  repeated SubscriptionUser subscriptions = 1;
   repeated SubscriptionUser subscribers = 2;
+}
+
+message SubscribeRequest {
+  string user_id = 1;
+  string subscription_id = 2;
 }
 
 enum Language {
