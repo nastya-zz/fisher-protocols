@@ -8,17 +8,17 @@ import "google/protobuf/timestamp.proto";
 import "google/protobuf/wrappers.proto";
 import "google/protobuf/empty.proto";
 
-
 service UserV1 {
   rpc GetProfile(GetProfileRequest) returns (GetProfileResponse);
   rpc UpdateProfile(UpdateProfileRequest) returns (UpdateProfileResponse);
   rpc GetSettings(GetSettingsRequest) returns (GetSettingsResponse);
   rpc UpdateSettings(UpdateSettingsRequest) returns (UpdateSettingsResponse);
   rpc ResetSettings(ResetSettingsRequest) returns (ResetSettingsResponse);
-  rpc GetSubscriptions(GetSubscriptionsRequest) returns (GetSubscriptionsResponse);
+  rpc GetSubscriptions(GetSubscriptionsRequest)
+      returns (GetSubscriptionsResponse);
   rpc Subscribe(SubscribeRequest) returns (google.protobuf.Empty);
   rpc UnSubscribe(SubscribeRequest) returns (google.protobuf.Empty);
-
+  rpc UploadAvatar(UploadAvatarRequest) returns (UploadAvatarResponse);
 }
 
 message UserProfile {
@@ -32,12 +32,8 @@ message UserProfile {
   google.protobuf.Timestamp created_at = 8;
   string id = 9;
 }
-message GetProfileRequest {
-   string id = 1;
-}
-message GetProfileResponse {
-  UserProfile profile = 1;
-}
+message GetProfileRequest { string id = 1; }
+message GetProfileResponse { UserProfile profile = 1; }
 
 message UpdateProfile {
   string id = 1;
@@ -47,22 +43,15 @@ message UpdateProfile {
   google.protobuf.StringValue avatar_path = 5;
   google.protobuf.BoolValue is_public = 6;
 }
-message UpdateProfileRequest {
-  UpdateProfile info = 1;
-}
-message UpdateProfileResponse {
-  UserProfile profile = 1;
-}
-
+message UpdateProfileRequest { UpdateProfile info = 1; }
+message UpdateProfileResponse { UserProfile profile = 1; }
 
 message SubscriptionUser {
   string id = 1;
   string name = 2;
   string avatar_path = 3;
 }
-message GetSubscriptionsRequest {
-  string id = 1;
-}
+message GetSubscriptionsRequest { string id = 1; }
 message GetSubscriptionsResponse {
   repeated SubscriptionUser subscriptions = 1;
   repeated SubscriptionUser subscribers = 2;
@@ -83,24 +72,21 @@ enum Availability {
 }
 message AccountSettings {
   Language language = 1;
-  Availability  availability = 2;
+  Availability availability = 2;
 }
-message GetSettingsRequest {
-  string id = 1;
-}
-message GetSettingsResponse {
-  AccountSettings settings = 1;
-}
+message GetSettingsRequest { string id = 1; }
+message GetSettingsResponse { AccountSettings settings = 1; }
 message UpdateSettingsRequest {
   string user_id = 1;
   AccountSettings settings_info = 2;
 }
-message UpdateSettingsResponse {
-  AccountSettings settings = 1;
+message UpdateSettingsResponse { AccountSettings settings = 1; }
+message ResetSettingsRequest { string user_id = 1; }
+message ResetSettingsResponse { AccountSettings settings = 1; }
+
+message UploadAvatarRequest {
+  bytes image = 1;
+  string filename = 2;
 }
-message ResetSettingsRequest {
-  string user_id = 1;
-}
-message ResetSettingsResponse {
-  AccountSettings settings = 1;
-}
+
+message UploadAvatarResponse { string link = 1; }
