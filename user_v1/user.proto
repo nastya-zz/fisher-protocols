@@ -87,6 +87,7 @@ message ResetSettingsResponse { AccountSettings settings = 1; }
 message UploadAvatarRequest {
   bytes image = 1;
   string filename = 2;
+  string userId = 3;
 }
 
 message UploadAvatarResponse { string link = 1; }
