@@ -19,6 +19,7 @@ service UserV1 {
   rpc Subscribe(SubscribeRequest) returns (google.protobuf.Empty);
   rpc UnSubscribe(SubscribeRequest) returns (google.protobuf.Empty);
   rpc UploadAvatar(UploadAvatarRequest) returns (UploadAvatarResponse);
+  rpc RemoveAvatar(RemoveAvatarRequest) returns (google.protobuf.Empty);
 }
 
 message UserProfile {
@@ -91,3 +92,8 @@ message UploadAvatarRequest {
 }
 
 message UploadAvatarResponse { string link = 1; }
+
+message RemoveAvatarRequest {
+  string userId = 1;
+  string filename = 2;
+}

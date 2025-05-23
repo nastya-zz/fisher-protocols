@@ -32,6 +32,7 @@ type UserV1Client interface {
 	Subscribe(ctx context.Context, in *SubscribeRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	UnSubscribe(ctx context.Context, in *SubscribeRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	UploadAvatar(ctx context.Context, in *UploadAvatarRequest, opts ...grpc.CallOption) (*UploadAvatarResponse, error)
+	RemoveAvatar(ctx context.Context, in *RemoveAvatarRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type userV1Client struct {
@@ -123,6 +124,15 @@ func (c *userV1Client) UploadAvatar(ctx context.Context, in *UploadAvatarRequest
 	return out, nil
 }
 
+func (c *userV1Client) RemoveAvatar(ctx context.Context, in *RemoveAvatarRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/user_v1.UserV1/RemoveAvatar", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserV1Server is the server API for UserV1 service.
 // All implementations must embed UnimplementedUserV1Server
 // for forward compatibility
@@ -136,6 +146,7 @@ type UserV1Server interface {
 	Subscribe(context.Context, *SubscribeRequest) (*emptypb.Empty, error)
 	UnSubscribe(context.Context, *SubscribeRequest) (*emptypb.Empty, error)
 	UploadAvatar(context.Context, *UploadAvatarRequest) (*UploadAvatarResponse, error)
+	RemoveAvatar(context.Context, *RemoveAvatarRequest) (*emptypb.Empty, error)
 	mustEmbedUnimplementedUserV1Server()
 }
 
@@ -169,6 +180,9 @@ func (UnimplementedUserV1Server) UnSubscribe(context.Context, *SubscribeRequest)
 }
 func (UnimplementedUserV1Server) UploadAvatar(context.Context, *UploadAvatarRequest) (*UploadAvatarResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UploadAvatar not implemented")
+}
+func (UnimplementedUserV1Server) RemoveAvatar(context.Context, *RemoveAvatarRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RemoveAvatar not implemented")
 }
 func (UnimplementedUserV1Server) mustEmbedUnimplementedUserV1Server() {}
 
@@ -345,6 +359,24 @@ func _UserV1_UploadAvatar_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserV1_RemoveAvatar_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RemoveAvatarRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserV1Server).RemoveAvatar(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user_v1.UserV1/RemoveAvatar",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserV1Server).RemoveAvatar(ctx, req.(*RemoveAvatarRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // UserV1_ServiceDesc is the grpc.ServiceDesc for UserV1 service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -387,6 +419,10 @@ var UserV1_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UploadAvatar",
 			Handler:    _UserV1_UploadAvatar_Handler,
+		},
+		{
+			MethodName: "RemoveAvatar",
+			Handler:    _UserV1_RemoveAvatar_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
