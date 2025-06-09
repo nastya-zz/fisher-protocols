@@ -67,5 +67,4 @@ message UpdateUserResponse {
 }
 
 message UpdateUserRoleRequest { Role role = 1; }
-
 message UpdateUserRoleResponse { Role role = 1; }
