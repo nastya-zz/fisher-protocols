@@ -6,13 +6,16 @@ option go_package = "protos/auth_v1/auth.proto;auth_v1";
 
 import "google/protobuf/empty.proto";
 
-
 service AuthV1 {
   rpc CreateUser(CreateUserRequest) returns (CreateUserResponse);
+  rpc UpdateUser(UpdateUserRequest) returns (UpdateUserResponse);
   rpc Login(LoginRequest) returns (LoginResponse);
-  rpc GetRefreshToken (GetRefreshTokenRequest) returns (GetRefreshTokenResponse);
-  rpc GetAccessToken (GetAccessTokenRequest) returns (GetAccessTokenResponse);
+  rpc GetRefreshToken(GetRefreshTokenRequest) returns (GetRefreshTokenResponse);
+  rpc GetAccessToken(GetAccessTokenRequest) returns (GetAccessTokenResponse);
   rpc Check(CheckRequest) returns (google.protobuf.Empty);
+  rpc BlockUser(BlockUserRequest) returns (BlockUserResponse);
+  rpc DeleteUser(BlockUserRequest) returns (BlockUserResponse);
+  rpc UpdateUserRole(UpdateUserRoleRequest) returns (UpdateUserRoleResponse);
 }
 
 enum Role {
@@ -20,7 +23,7 @@ enum Role {
   USER = 1;
 }
 
-message CreateUserInfo {
+message UserInfo {
   string name = 1;
   string email = 2;
   string password = 3;
@@ -28,14 +31,9 @@ message CreateUserInfo {
   Role role = 5;
 }
 
+message CreateUserRequest { UserInfo user_info = 1; }
 
-message CreateUserRequest {
- CreateUserInfo user_info = 1;
-}
-
-message CreateUserResponse {
-  string id = 1;
-}
+message CreateUserResponse { string id = 1; }
 
 message LoginRequest {
   string login = 1;
@@ -44,24 +42,30 @@ message LoginRequest {
 
 message LoginResponse {
   string refresh_token = 1;
+  Role role = 2;
 }
 
-message GetRefreshTokenRequest {
-  string refresh_token = 1;
+message GetRefreshTokenRequest { string refresh_token = 1; }
+
+message GetRefreshTokenResponse { string refresh_token = 1; }
+
+message GetAccessTokenRequest { string refresh_token = 1; }
+
+message GetAccessTokenResponse { string access_token = 1; }
+
+message CheckRequest { string endpoint_address = 1; }
+
+message BlockUserRequest { string id = 1; }
+message BlockUserResponse { string id = 1; }
+
+message UpdateUserRequest { UserInfo user_info = 1; }
+message UpdateUserResponse {
+  string id = 1;
+  string name = 2;
+  string email = 3;
+  bool is_verified = 4;
 }
 
-message GetRefreshTokenResponse {
-  string refresh_token = 1;
-}
+message UpdateUserRoleRequest { Role role = 1; }
 
-message GetAccessTokenRequest {
-  string refresh_token = 1;
-}
-
-message GetAccessTokenResponse {
-  string  access_token = 1;
-}
-
-message CheckRequest {
-  string endpoint_address = 1;
-}
+message UpdateUserRoleResponse { Role role = 1; }
