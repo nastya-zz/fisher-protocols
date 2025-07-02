@@ -59,7 +59,10 @@ message CheckRequest { string endpoint_address = 1; }
 message BlockUserRequest { string id = 1; }
 message BlockUserResponse { string id = 1; }
 
-message UpdateUserRequest { UserInfo user_info = 1; }
+message UpdateUserRequest {
+  UserInfo user_info = 1;
+  string id = 2;
+}
 message UpdateUserResponse {
   string id = 1;
   string name = 2;
