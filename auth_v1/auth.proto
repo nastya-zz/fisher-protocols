@@ -29,6 +29,7 @@ message UserInfo {
   string password = 3;
   string password_confirm = 4;
   Role role = 5;
+  bool is_verified = 6;
 }
 
 message CreateUserRequest { UserInfo user_info = 1; }
