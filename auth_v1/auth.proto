@@ -70,5 +70,5 @@ message UpdateUserResponse {
   bool is_verified = 4;
 }
 
-message UpdateUserRoleRequest { Role role = 1; }
-message UpdateUserRoleResponse { Role role = 1; }
+message UpdateUserRoleRequest { Role role = 1; string id = 2; }
+message UpdateUserRoleResponse { Role role = 1; string id = 2; }
