@@ -1,0 +1,160 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+package post_v1;
+
+option go_package = "protos/post_v1/user.proto;post_v1";
+
+// Сервис для работы с постами
+service PostService {
+  // Создание нового поста
+  rpc CreatePost(CreatePostRequest) returns (Post);
+
+  // Получение поста по ID
+  rpc GetPost(GetPostRequest) returns (Post);
+
+  // Обновление поста
+  rpc UpdatePost(UpdatePostRequest) returns (Post);
+
+  // Удаление поста
+  rpc DeletePost(DeletePostRequest) returns (DeletePostResponse);
+
+  // Добавление лайка к посту
+  rpc AddLike(AddLikeRequest) returns (Like);
+
+  // Добавление комментария к посту
+  rpc AddComment(AddCommentRequest) returns (Comment);
+
+  // Удаление лайка
+  rpc RemoveLike(RemoveLikeRequest) returns (RemoveLikeResponse);
+
+  // Удаление комментария
+  rpc RemoveComment(RemoveCommentRequest) returns (RemoveCommentResponse);
+}
+
+// Кастомное определение геопозиции
+message LatLng {
+  double latitude = 1;  // Широта (-90 to 90)
+  double longitude = 2; // Долгота (-180 to 180)
+}
+
+// Основной объект поста
+message Post {
+  string id = 1;                        // UUID поста
+  string user_id = 2;                   // ID автора
+  string description = 3;               // Текстовое описание
+  LatLng location = 4;                  // Геолокация
+  repeated Media media = 5;             // Медиа-материалы
+  repeated Like likes = 6;              // Лайки
+  repeated Comment comments = 7;        // Комментарии
+  repeated FishType fish_types = 8;     // Виды рыбы (опционально)
+  repeated TackleType tackle_types = 9; // Типы снастей (опционально)
+  google.protobuf.Timestamp created_at = 10;
+  google.protobuf.Timestamp updated_at = 11;
+}
+
+// Медиа-контент (фото/видео)
+message Media {
+  enum MediaType {
+    UNKNOWN = 0;
+    PHOTO = 1;
+    VIDEO = 2;
+  }
+
+  MediaType type = 1;
+  string url = 2;           // URL основного контента
+  string thumbnail_url = 3; // URL превью (для видео)
+  int32 width = 4;          // Ширина в пикселях
+  int32 height = 5;         // Высота в пикселях
+  float duration = 6;       // Длительность в секундах (для видео)
+}
+
+// Лайк
+message Like {
+  string id = 1;
+  string user_id = 2; // ID пользователя
+  string post_id = 3; // ID поста
+  google.protobuf.Timestamp created_at = 4;
+}
+
+// Комментарий
+message Comment {
+  string id = 1;
+  string user_id = 2; // ID автора
+  string post_id = 3; // ID поста
+  string content = 4; // Текст комментария
+  google.protobuf.Timestamp created_at = 5;
+  google.protobuf.Timestamp updated_at = 6;
+}
+
+// Вид рыбы
+message FishType {
+  string id = 1;
+  string name = 2; // Название вида (e.g. "Щука", "Карп")
+  string description = 3;
+}
+
+// Тип снасти
+message TackleType {
+  string id = 1;
+  string name = 2;        // Название снасти (e.g. "Спиннинг", "Фидер")
+  string description = 3; // Категория (e.g. "Удочка", "Приманка")
+}
+
+// Запросы
+message CreatePostRequest {
+  string user_id = 1;
+  string description = 2;
+  LatLng location = 3;
+  repeated Media media = 4;
+  repeated string fish_type_ids = 5;   // Опциональные ID видов рыбы
+  repeated string tackle_type_ids = 6; // Опциональные ID снастей
+}
+
+message GetPostRequest { string id = 1; }
+
+message UpdatePostRequest {
+  string id = 1;
+  string description = 2;
+  repeated Media media = 3;
+  repeated string fish_type_ids = 4;
+  repeated string tackle_type_ids = 5;
+}
+
+message DeletePostRequest { string id = 1; }
+
+message DeletePostResponse { bool success = 1; }
+
+message AddLikeRequest {
+  string user_id = 1;
+  string post_id = 2;
+}
+
+message AddCommentRequest {
+  string user_id = 1;
+  string post_id = 2;
+  string content = 3;
+}
+
+// Запрос на удаление лайка
+message RemoveLikeRequest {
+  string user_id = 1; // ID пользователя, удаляющего лайк
+  string post_id = 2; // ID поста
+}
+
+message RemoveLikeResponse {
+  bool success = 1;
+  int32 new_likes_count = 2; // Обновленное количество лайков
+}
+
+// Запрос на удаление комментария
+message RemoveCommentRequest {
+  string comment_id = 1; // ID комментария
+  string user_id = 2;    // ID пользователя, инициирующего удаление
+}
+
+message RemoveCommentResponse {
+  bool success = 1;
+  string post_id = 2; // ID поста для обновления UI
+}
