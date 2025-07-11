@@ -11,6 +11,9 @@ service PostService {
   // Создание нового поста
   rpc CreatePost(CreatePostRequest) returns (Post);
 
+  // Загрузка медиа
+  rpc UploadMedia(UploadMediaResponse) returns (UploadMediaResponse);
+
   // Получение поста по ID
   rpc GetPost(GetPostRequest) returns (Post);
 
@@ -55,13 +58,13 @@ message Post {
 }
 
 // Медиа-контент (фото/видео)
-message Media {
-  enum MediaType {
-    UNKNOWN = 0;
-    PHOTO = 1;
-    VIDEO = 2;
-  }
+enum MediaType {
+  UNKNOWN = 0;
+  PHOTO = 1;
+  VIDEO = 2;
+}
 
+message Media {
   MediaType type = 1;
   string url = 2;           // URL основного контента
   string thumbnail_url = 3; // URL превью (для видео)
@@ -102,14 +105,24 @@ message TackleType {
   string description = 3; // Категория (e.g. "Удочка", "Приманка")
 }
 
+message UploadMediaRequest {
+  bytes image = 1;
+  string filename = 2;
+  string userId = 3;
+  bool is_thumbnail = 4;
+  MediaType type = 5;
+}
+
+message UploadMediaResponse { string id = 1; }
+
 // Запросы
 message CreatePostRequest {
   string user_id = 1;
   string description = 2;
   LatLng location = 3;
-  repeated Media media = 4;
-  repeated string fish_type_ids = 5;   // Опциональные ID видов рыбы
-  repeated string tackle_type_ids = 6; // Опциональные ID снастей
+  repeated string media = 4;
+  repeated int32 fish_type_ids = 5;   // Опциональные ID видов рыбы
+  repeated int32 tackle_type_ids = 6; // Опциональные ID снастей
 }
 
 message GetPostRequest { string id = 1; }

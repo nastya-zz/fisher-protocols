@@ -24,6 +24,8 @@ const _ = grpc.SupportPackageIsVersion7
 type PostServiceClient interface {
 	// Создание нового поста
 	CreatePost(ctx context.Context, in *CreatePostRequest, opts ...grpc.CallOption) (*Post, error)
+	// Загрузка медиа
+	UploadMedia(ctx context.Context, in *UploadMediaResponse, opts ...grpc.CallOption) (*UploadMediaResponse, error)
 	// Получение поста по ID
 	GetPost(ctx context.Context, in *GetPostRequest, opts ...grpc.CallOption) (*Post, error)
 	// Обновление поста
@@ -51,6 +53,15 @@ func NewPostServiceClient(cc grpc.ClientConnInterface) PostServiceClient {
 func (c *postServiceClient) CreatePost(ctx context.Context, in *CreatePostRequest, opts ...grpc.CallOption) (*Post, error) {
 	out := new(Post)
 	err := c.cc.Invoke(ctx, "/post_v1.PostService/CreatePost", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *postServiceClient) UploadMedia(ctx context.Context, in *UploadMediaResponse, opts ...grpc.CallOption) (*UploadMediaResponse, error) {
+	out := new(UploadMediaResponse)
+	err := c.cc.Invoke(ctx, "/post_v1.PostService/UploadMedia", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -126,6 +137,8 @@ func (c *postServiceClient) RemoveComment(ctx context.Context, in *RemoveComment
 type PostServiceServer interface {
 	// Создание нового поста
 	CreatePost(context.Context, *CreatePostRequest) (*Post, error)
+	// Загрузка медиа
+	UploadMedia(context.Context, *UploadMediaResponse) (*UploadMediaResponse, error)
 	// Получение поста по ID
 	GetPost(context.Context, *GetPostRequest) (*Post, error)
 	// Обновление поста
@@ -149,6 +162,9 @@ type UnimplementedPostServiceServer struct {
 
 func (UnimplementedPostServiceServer) CreatePost(context.Context, *CreatePostRequest) (*Post, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreatePost not implemented")
+}
+func (UnimplementedPostServiceServer) UploadMedia(context.Context, *UploadMediaResponse) (*UploadMediaResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UploadMedia not implemented")
 }
 func (UnimplementedPostServiceServer) GetPost(context.Context, *GetPostRequest) (*Post, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetPost not implemented")
@@ -198,6 +214,24 @@ func _PostService_CreatePost_Handler(srv interface{}, ctx context.Context, dec f
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(PostServiceServer).CreatePost(ctx, req.(*CreatePostRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PostService_UploadMedia_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UploadMediaResponse)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PostServiceServer).UploadMedia(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/post_v1.PostService/UploadMedia",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PostServiceServer).UploadMedia(ctx, req.(*UploadMediaResponse))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -338,6 +372,10 @@ var PostService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CreatePost",
 			Handler:    _PostService_CreatePost_Handler,
+		},
+		{
+			MethodName: "UploadMedia",
+			Handler:    _PostService_UploadMedia_Handler,
 		},
 		{
 			MethodName: "GetPost",
