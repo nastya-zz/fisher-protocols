@@ -49,8 +49,8 @@ message Post {
   string description = 3;               // Текстовое описание
   LatLng location = 4;                  // Геолокация
   repeated Media media = 5;             // Медиа-материалы
-  repeated Like likes = 6;              // Лайки
-  repeated Comment comments = 7;        // Комментарии
+  int32 likes_count = 6;                // Лайки
+  int32 comments_count = 7;             // Комментарии
   repeated FishType fish_types = 8;     // Виды рыбы (опционально)
   repeated TackleType tackle_types = 9; // Типы снастей (опционально)
   google.protobuf.Timestamp created_at = 10;
