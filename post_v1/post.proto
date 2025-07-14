@@ -71,6 +71,8 @@ message Media {
   int32 width = 4;          // Ширина в пикселях
   int32 height = 5;         // Высота в пикселях
   float duration = 6;       // Длительность в секундах (для видео)
+  string id = 7;            // Уникальный идентификатор медиа
+  google.protobuf.Timestamp created_at = 8; // Дата создания
 }
 
 // Лайк
