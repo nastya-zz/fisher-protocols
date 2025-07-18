@@ -35,7 +35,7 @@ type PostServiceClient interface {
 	// Удаление поста
 	DeletePost(ctx context.Context, in *DeletePostRequest, opts ...grpc.CallOption) (*DeletePostResponse, error)
 	// Добавление лайка к посту
-	AddLike(ctx context.Context, in *AddLikeRequest, opts ...grpc.CallOption) (*Like, error)
+	AddLike(ctx context.Context, in *AddLikeRequest, opts ...grpc.CallOption) (*AddLikeResponse, error)
 	// Добавление комментария к посту
 	AddComment(ctx context.Context, in *AddCommentRequest, opts ...grpc.CallOption) (*Comment, error)
 	// Удаление лайка
@@ -106,8 +106,8 @@ func (c *postServiceClient) DeletePost(ctx context.Context, in *DeletePostReques
 	return out, nil
 }
 
-func (c *postServiceClient) AddLike(ctx context.Context, in *AddLikeRequest, opts ...grpc.CallOption) (*Like, error) {
-	out := new(Like)
+func (c *postServiceClient) AddLike(ctx context.Context, in *AddLikeRequest, opts ...grpc.CallOption) (*AddLikeResponse, error) {
+	out := new(AddLikeResponse)
 	err := c.cc.Invoke(ctx, "/post_v1.PostService/AddLike", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -159,7 +159,7 @@ type PostServiceServer interface {
 	// Удаление поста
 	DeletePost(context.Context, *DeletePostRequest) (*DeletePostResponse, error)
 	// Добавление лайка к посту
-	AddLike(context.Context, *AddLikeRequest) (*Like, error)
+	AddLike(context.Context, *AddLikeRequest) (*AddLikeResponse, error)
 	// Добавление комментария к посту
 	AddComment(context.Context, *AddCommentRequest) (*Comment, error)
 	// Удаление лайка
@@ -191,7 +191,7 @@ func (UnimplementedPostServiceServer) UpdatePost(context.Context, *UpdatePostReq
 func (UnimplementedPostServiceServer) DeletePost(context.Context, *DeletePostRequest) (*DeletePostResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeletePost not implemented")
 }
-func (UnimplementedPostServiceServer) AddLike(context.Context, *AddLikeRequest) (*Like, error) {
+func (UnimplementedPostServiceServer) AddLike(context.Context, *AddLikeRequest) (*AddLikeResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddLike not implemented")
 }
 func (UnimplementedPostServiceServer) AddComment(context.Context, *AddCommentRequest) (*Comment, error) {

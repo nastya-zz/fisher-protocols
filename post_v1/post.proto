@@ -27,7 +27,7 @@ service PostService {
   rpc DeletePost(DeletePostRequest) returns (DeletePostResponse);
 
   // Добавление лайка к посту
-  rpc AddLike(AddLikeRequest) returns (Like);
+  rpc AddLike(AddLikeRequest) returns (AddLikeResponse);
 
   // Добавление комментария к посту
   rpc AddComment(AddCommentRequest) returns (Comment);
@@ -156,6 +156,8 @@ message AddLikeRequest {
   string user_id = 1;
   string post_id = 2;
 }
+
+message AddLikeResponse { int32 likes_count = 1; }
 
 message AddCommentRequest {
   string user_id = 1;
