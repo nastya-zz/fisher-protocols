@@ -17,6 +17,9 @@ service PostService {
   // Получение поста по ID
   rpc GetPost(GetPostRequest) returns (Post);
 
+  // Получение спасика постов по ID
+  rpc GetPosts(GetPostRequest) returns (GetPostsResponse);
+
   // Обновление поста
   rpc UpdatePost(UpdatePostRequest) returns (Post);
 
@@ -42,10 +45,16 @@ message LatLng {
   double longitude = 2; // Долгота (-180 to 180)
 }
 
+message User {
+  string id = 1;
+  string username = 2;
+  string avatar_url = 3;
+}
+
 // Основной объект поста
 message Post {
   string id = 1;                        // UUID поста
-  string user_id = 2;                   // ID автора
+  User user = 2;                        // ID автора
   string description = 3;               // Текстовое описание
   LatLng location = 4;                  // Геолокация
   repeated Media media = 5;             // Медиа-материалы
@@ -128,6 +137,8 @@ message CreatePostRequest {
 }
 
 message GetPostRequest { string id = 1; }
+
+message GetPostsResponse { repeated Post posts = 1; }
 
 message UpdatePostRequest {
   string id = 1;
