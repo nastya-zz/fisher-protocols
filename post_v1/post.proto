@@ -157,7 +157,10 @@ message AddLikeRequest {
   string post_id = 2;
 }
 
-message AddLikeResponse { int32 likes_count = 1; }
+message AddLikeResponse {
+  int32 likes_count = 1;
+  bool success = 2;
+}
 
 message AddCommentRequest {
   string user_id = 1;
