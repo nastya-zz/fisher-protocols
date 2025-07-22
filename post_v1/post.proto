@@ -119,7 +119,7 @@ message TackleType {
 message UploadMediaRequest {
   bytes image = 1;
   string filename = 2;
-  string userId = 3;
+  string postId = 3;
   bool is_thumbnail = 4;
   MediaType type = 5;
 }
