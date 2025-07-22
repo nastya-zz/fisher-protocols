@@ -12,7 +12,7 @@ service PostService {
   rpc CreatePost(CreatePostRequest) returns (Post);
 
   // Загрузка медиа
-  rpc UploadMedia(UploadMediaResponse) returns (UploadMediaResponse);
+  rpc UploadMedia(UploadMediaRequest) returns (UploadMediaResponse);
 
   // Получение поста по ID
   rpc GetPost(GetPostRequest) returns (Post);
