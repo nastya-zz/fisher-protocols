@@ -36,12 +36,16 @@ type PostServiceClient interface {
 	DeletePost(ctx context.Context, in *DeletePostRequest, opts ...grpc.CallOption) (*DeletePostResponse, error)
 	// Добавление лайка к посту
 	AddLike(ctx context.Context, in *AddLikeRequest, opts ...grpc.CallOption) (*AddLikeResponse, error)
+	// Получение списка лайков
+	GetLikes(ctx context.Context, in *PostId, opts ...grpc.CallOption) (*GetLikesResponse, error)
 	// Добавление комментария к посту
 	AddComment(ctx context.Context, in *AddCommentRequest, opts ...grpc.CallOption) (*Comment, error)
 	// Удаление лайка
 	RemoveLike(ctx context.Context, in *RemoveLikeRequest, opts ...grpc.CallOption) (*RemoveLikeResponse, error)
 	// Удаление комментария
 	RemoveComment(ctx context.Context, in *RemoveCommentRequest, opts ...grpc.CallOption) (*RemoveCommentResponse, error)
+	// Получение списка комментариев
+	GetComments(ctx context.Context, in *PostId, opts ...grpc.CallOption) (*GetCommentsResponse, error)
 }
 
 type postServiceClient struct {
@@ -115,6 +119,15 @@ func (c *postServiceClient) AddLike(ctx context.Context, in *AddLikeRequest, opt
 	return out, nil
 }
 
+func (c *postServiceClient) GetLikes(ctx context.Context, in *PostId, opts ...grpc.CallOption) (*GetLikesResponse, error) {
+	out := new(GetLikesResponse)
+	err := c.cc.Invoke(ctx, "/post_v1.PostService/GetLikes", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *postServiceClient) AddComment(ctx context.Context, in *AddCommentRequest, opts ...grpc.CallOption) (*Comment, error) {
 	out := new(Comment)
 	err := c.cc.Invoke(ctx, "/post_v1.PostService/AddComment", in, out, opts...)
@@ -142,6 +155,15 @@ func (c *postServiceClient) RemoveComment(ctx context.Context, in *RemoveComment
 	return out, nil
 }
 
+func (c *postServiceClient) GetComments(ctx context.Context, in *PostId, opts ...grpc.CallOption) (*GetCommentsResponse, error) {
+	out := new(GetCommentsResponse)
+	err := c.cc.Invoke(ctx, "/post_v1.PostService/GetComments", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // PostServiceServer is the server API for PostService service.
 // All implementations must embed UnimplementedPostServiceServer
 // for forward compatibility
@@ -160,12 +182,16 @@ type PostServiceServer interface {
 	DeletePost(context.Context, *DeletePostRequest) (*DeletePostResponse, error)
 	// Добавление лайка к посту
 	AddLike(context.Context, *AddLikeRequest) (*AddLikeResponse, error)
+	// Получение списка лайков
+	GetLikes(context.Context, *PostId) (*GetLikesResponse, error)
 	// Добавление комментария к посту
 	AddComment(context.Context, *AddCommentRequest) (*Comment, error)
 	// Удаление лайка
 	RemoveLike(context.Context, *RemoveLikeRequest) (*RemoveLikeResponse, error)
 	// Удаление комментария
 	RemoveComment(context.Context, *RemoveCommentRequest) (*RemoveCommentResponse, error)
+	// Получение списка комментариев
+	GetComments(context.Context, *PostId) (*GetCommentsResponse, error)
 	mustEmbedUnimplementedPostServiceServer()
 }
 
@@ -194,6 +220,9 @@ func (UnimplementedPostServiceServer) DeletePost(context.Context, *DeletePostReq
 func (UnimplementedPostServiceServer) AddLike(context.Context, *AddLikeRequest) (*AddLikeResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddLike not implemented")
 }
+func (UnimplementedPostServiceServer) GetLikes(context.Context, *PostId) (*GetLikesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetLikes not implemented")
+}
 func (UnimplementedPostServiceServer) AddComment(context.Context, *AddCommentRequest) (*Comment, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddComment not implemented")
 }
@@ -202,6 +231,9 @@ func (UnimplementedPostServiceServer) RemoveLike(context.Context, *RemoveLikeReq
 }
 func (UnimplementedPostServiceServer) RemoveComment(context.Context, *RemoveCommentRequest) (*RemoveCommentResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RemoveComment not implemented")
+}
+func (UnimplementedPostServiceServer) GetComments(context.Context, *PostId) (*GetCommentsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetComments not implemented")
 }
 func (UnimplementedPostServiceServer) mustEmbedUnimplementedPostServiceServer() {}
 
@@ -342,6 +374,24 @@ func _PostService_AddLike_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
+func _PostService_GetLikes_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostId)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PostServiceServer).GetLikes(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/post_v1.PostService/GetLikes",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PostServiceServer).GetLikes(ctx, req.(*PostId))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _PostService_AddComment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(AddCommentRequest)
 	if err := dec(in); err != nil {
@@ -396,6 +446,24 @@ func _PostService_RemoveComment_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
+func _PostService_GetComments_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostId)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PostServiceServer).GetComments(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/post_v1.PostService/GetComments",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PostServiceServer).GetComments(ctx, req.(*PostId))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // PostService_ServiceDesc is the grpc.ServiceDesc for PostService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -432,6 +500,10 @@ var PostService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _PostService_AddLike_Handler,
 		},
 		{
+			MethodName: "GetLikes",
+			Handler:    _PostService_GetLikes_Handler,
+		},
+		{
 			MethodName: "AddComment",
 			Handler:    _PostService_AddComment_Handler,
 		},
@@ -442,6 +514,10 @@ var PostService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "RemoveComment",
 			Handler:    _PostService_RemoveComment_Handler,
+		},
+		{
+			MethodName: "GetComments",
+			Handler:    _PostService_GetComments_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

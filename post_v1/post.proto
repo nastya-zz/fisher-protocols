@@ -29,6 +29,9 @@ service PostService {
   // Добавление лайка к посту
   rpc AddLike(AddLikeRequest) returns (AddLikeResponse);
 
+  // Получение списка лайков
+  rpc GetLikes(PostId) returns (GetLikesResponse);
+
   // Добавление комментария к посту
   rpc AddComment(AddCommentRequest) returns (Comment);
 
@@ -37,6 +40,9 @@ service PostService {
 
   // Удаление комментария
   rpc RemoveComment(RemoveCommentRequest) returns (RemoveCommentResponse);
+
+  // Получение списка комментариев
+  rpc GetComments(PostId) returns (GetCommentsResponse);
 }
 
 // Кастомное определение геопозиции
@@ -95,7 +101,7 @@ message Like {
 // Комментарий
 message Comment {
   string id = 1;
-  string user_id = 2; // ID автора
+  string User = 2;    // автор
   string post_id = 3; // ID поста
   string content = 4; // Текст комментария
   google.protobuf.Timestamp created_at = 5;
@@ -189,3 +195,9 @@ message RemoveCommentResponse {
   bool success = 1;
   string post_id = 2; // ID поста для обновления UI
 }
+
+message PostId { string post_id = 1; }
+
+message GetLikesResponse { repeated User likes = 1; }
+
+message GetCommentsResponse { repeated Comment comments = 1; }
