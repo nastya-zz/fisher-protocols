@@ -149,9 +149,9 @@ message GetPostsResponse { repeated Post posts = 1; }
 message UpdatePostRequest {
   string id = 1;
   string description = 2;
-  repeated Media media = 3;
-  repeated string fish_type_ids = 4;
-  repeated string tackle_type_ids = 5;
+  repeated string fish_type_ids = 3;
+  repeated string tackle_type_ids = 4;
+  LatLng location = 5;
 }
 
 message DeletePostRequest { string id = 1; }
