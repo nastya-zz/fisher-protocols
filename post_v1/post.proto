@@ -149,8 +149,8 @@ message GetPostsResponse { repeated Post posts = 1; }
 message UpdatePostRequest {
   string id = 1;
   string description = 2;
-  repeated string fish_type_ids = 3;
-  repeated string tackle_type_ids = 4;
+  repeated int32 fish_type_ids = 3;
+  repeated int32 tackle_type_ids = 4;
   LatLng location = 5;
 }
 
