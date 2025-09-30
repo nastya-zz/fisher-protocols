@@ -98,14 +98,24 @@ message Like {
   google.protobuf.Timestamp created_at = 4;
 }
 
-// Комментарий
+// Комментарий к посту
 message Comment {
-  string id = 1;
-  string User = 2;    // автор
-  string post_id = 3; // ID поста
+  string id = 1;      // Уникальный идентификатор комментария
+  User user = 2;      // Информация об авторе комментария
+  string post_id = 3; // ID поста, к которому относится комментарий
   string content = 4; // Текст комментария
-  google.protobuf.Timestamp created_at = 5;
-  google.protobuf.Timestamp updated_at = 6;
+  google.protobuf.Timestamp created_at = 5; // Дата и время создания комментария
+  google.protobuf.Timestamp updated_at =
+      6; // Дата и время последнего обновления комментария
+  string user_id =
+      7; // ID автора комментария (дублирует user.id для удобства запросов)
+  optional string parent_comment_id =
+      8; // ID родительского комментария (для вложенных комментариев)
+  optional string reply_to_user_id =
+      9;                         // ID пользователя, на которого ссылается ответ
+  repeated Comment replies = 10; // Вложенные ответы на этот комментарий
+  bool is_reply = 11; // Флаг указывающий, является ли комментарий ответом на
+                      // другой комментарий
 }
 
 // Вид рыбы
