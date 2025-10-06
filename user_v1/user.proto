@@ -7,19 +7,63 @@ option go_package = "protos/user_v1/user.proto;user_v1";
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/wrappers.proto";
 import "google/protobuf/empty.proto";
+import "google/api/annotations.proto";
 
 service UserV1 {
-  rpc GetProfile(GetProfileRequest) returns (GetProfileResponse);
-  rpc UpdateProfile(UpdateProfileRequest) returns (UpdateProfileResponse);
-  rpc GetSettings(GetSettingsRequest) returns (GetSettingsResponse);
-  rpc UpdateSettings(UpdateSettingsRequest) returns (UpdateSettingsResponse);
-  rpc ResetSettings(ResetSettingsRequest) returns (ResetSettingsResponse);
+  rpc GetProfile(GetProfileRequest) returns (GetProfileResponse) {
+    option (google.api.http) = {
+      get : "/v1/users/{id}/profile"
+    };
+  }
+  rpc UpdateProfile(UpdateProfileRequest) returns (UpdateProfileResponse) {
+    option (google.api.http) = {
+      put : "/v1/users/profile"
+      body : "*"
+    };
+  }
+  rpc GetSettings(GetSettingsRequest) returns (GetSettingsResponse) {
+    option (google.api.http) = {
+      get : "/v1/users/{id}/settings"
+    };
+  }
+  rpc UpdateSettings(UpdateSettingsRequest) returns (UpdateSettingsResponse) {
+    option (google.api.http) = {
+      put : "/v1/users/settings"
+      body : "*"
+    };
+  }
+  rpc ResetSettings(ResetSettingsRequest) returns (ResetSettingsResponse) {
+    option (google.api.http) = {
+      post : "/v1/users/{user_id}/settings/reset"
+    };
+  }
   rpc GetSubscriptions(GetSubscriptionsRequest)
-      returns (GetSubscriptionsResponse);
-  rpc Subscribe(SubscribeRequest) returns (google.protobuf.Empty);
-  rpc UnSubscribe(SubscribeRequest) returns (google.protobuf.Empty);
-  rpc UploadAvatar(UploadAvatarRequest) returns (UploadAvatarResponse);
-  rpc RemoveAvatar(RemoveAvatarRequest) returns (google.protobuf.Empty);
+      returns (GetSubscriptionsResponse) {
+    option (google.api.http) = {
+      get : "/v1/users/{id}/subscriptions"
+    };
+  }
+  rpc Subscribe(SubscribeRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post : "/v1/users/{user_id}/subscribe/{subscription_id}"
+    };
+  }
+  rpc UnSubscribe(SubscribeRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete : "/v1/users/{user_id}/subscribe/{subscription_id}"
+    };
+  }
+  rpc UploadAvatar(UploadAvatarRequest) returns (UploadAvatarResponse) {
+    option (google.api.http) = {
+      post : "/v1/users/avatar"
+      body : "*"
+    };
+  }
+  rpc RemoveAvatar(RemoveAvatarRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete : "/v1/users/{userId}/avatar"
+    };
+  }
 }
 
 message UserProfile {

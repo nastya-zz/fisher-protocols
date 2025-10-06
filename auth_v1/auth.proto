@@ -5,17 +5,61 @@ package auth_v1;
 option go_package = "protos/auth_v1/auth.proto;auth_v1";
 
 import "google/protobuf/empty.proto";
+import "google/api/annotations.proto";
 
 service AuthV1 {
-  rpc CreateUser(CreateUserRequest) returns (CreateUserResponse);
-  rpc UpdateUser(UpdateUserRequest) returns (UpdateUserResponse);
-  rpc Login(LoginRequest) returns (LoginResponse);
-  rpc GetRefreshToken(GetRefreshTokenRequest) returns (GetRefreshTokenResponse);
-  rpc GetAccessToken(GetAccessTokenRequest) returns (GetAccessTokenResponse);
-  rpc Check(CheckRequest) returns (google.protobuf.Empty);
-  rpc BlockUser(BlockUserRequest) returns (BlockUserResponse);
-  rpc DeleteUser(BlockUserRequest) returns (BlockUserResponse);
-  rpc UpdateUserRole(UpdateUserRoleRequest) returns (UpdateUserRoleResponse);
+  rpc CreateUser(CreateUserRequest) returns (CreateUserResponse) {
+    option (google.api.http) = {
+      post : "/v1/auth/register"
+      body : "*"
+    };
+  }
+  rpc UpdateUser(UpdateUserRequest) returns (UpdateUserResponse) {
+    option (google.api.http) = {
+      put : "/v1/auth/users/{id}"
+      body : "*"
+    };
+  }
+  rpc Login(LoginRequest) returns (LoginResponse) {
+    option (google.api.http) = {
+      post : "/v1/auth/login"
+      body : "*"
+    };
+  }
+  rpc GetRefreshToken(GetRefreshTokenRequest)
+      returns (GetRefreshTokenResponse) {
+    option (google.api.http) = {
+      post : "/v1/auth/refresh"
+      body : "*"
+    };
+  }
+  rpc GetAccessToken(GetAccessTokenRequest) returns (GetAccessTokenResponse) {
+    option (google.api.http) = {
+      post : "/v1/auth/access"
+      body : "*"
+    };
+  }
+  rpc Check(CheckRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      get : "/v1/auth/check"
+    };
+  }
+  rpc BlockUser(BlockUserRequest) returns (BlockUserResponse) {
+    option (google.api.http) = {
+      post : "/v1/auth/users/{id}/block"
+    };
+  }
+  rpc DeleteUser(BlockUserRequest) returns (BlockUserResponse) {
+    option (google.api.http) = {
+      delete : "/v1/auth/users/{id}"
+    };
+  }
+  rpc UpdateUserRole(UpdateUserRoleRequest) returns (UpdateUserRoleResponse) {
+    option (google.api.http) = {
+      put : "/v1/auth/users/{id}/role"
+      body : "*"
+    };
+  }
 }
 
 enum Role {
@@ -70,5 +114,11 @@ message UpdateUserResponse {
   bool is_verified = 4;
 }
 
-message UpdateUserRoleRequest { Role role = 1; string id = 2; }
-message UpdateUserRoleResponse { Role role = 1; string id = 2; }
+message UpdateUserRoleRequest {
+  Role role = 1;
+  string id = 2;
+}
+message UpdateUserRoleResponse {
+  Role role = 1;
+  string id = 2;
+}

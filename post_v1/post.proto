@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 import "google/protobuf/timestamp.proto";
+import "google/api/annotations.proto";
 
 package post_v1;
 
@@ -9,40 +10,93 @@ option go_package = "protos/post_v1/user.proto;post_v1";
 // Сервис для работы с постами
 service PostService {
   // Создание нового поста
-  rpc CreatePost(CreatePostRequest) returns (Post);
+  rpc CreatePost(CreatePostRequest) returns (Post) {
+    option (google.api.http) = {
+      post : "/v1/posts"
+      body : "*"
+    };
+  }
 
   // Загрузка медиа
-  rpc UploadMedia(UploadMediaRequest) returns (UploadMediaResponse);
+  rpc UploadMedia(UploadMediaRequest) returns (UploadMediaResponse) {
+    option (google.api.http) = {
+      post : "/v1/posts/media"
+      body : "*"
+    };
+  }
 
   // Получение поста по ID
-  rpc GetPost(GetPostRequest) returns (Post);
+  rpc GetPost(GetPostRequest) returns (Post) {
+    option (google.api.http) = {
+      get : "/v1/posts/{id}"
+    };
+  }
 
   // Получение спасика постов по ID
-  rpc GetPosts(GetPostRequest) returns (GetPostsResponse);
+  rpc GetPosts(GetPostRequest) returns (GetPostsResponse) {
+    option (google.api.http) = {
+      get : "/v1/posts"
+    };
+  }
 
   // Обновление поста
-  rpc UpdatePost(UpdatePostRequest) returns (Post);
+  rpc UpdatePost(UpdatePostRequest) returns (Post) {
+    option (google.api.http) = {
+      put : "/v1/posts/{id}"
+      body : "*"
+    };
+  }
 
   // Удаление поста
-  rpc DeletePost(DeletePostRequest) returns (DeletePostResponse);
+  rpc DeletePost(DeletePostRequest) returns (DeletePostResponse) {
+    option (google.api.http) = {
+      delete : "/v1/posts/{id}"
+    };
+  }
 
   // Добавление лайка к посту
-  rpc AddLike(AddLikeRequest) returns (AddLikeResponse);
+  rpc AddLike(AddLikeRequest) returns (AddLikeResponse) {
+    option (google.api.http) = {
+      post : "/v1/posts/{post_id}/likes"
+      body : "*"
+    };
+  }
 
   // Получение списка лайков
-  rpc GetLikes(PostId) returns (GetLikesResponse);
+  rpc GetLikes(PostId) returns (GetLikesResponse) {
+    option (google.api.http) = {
+      get : "/v1/posts/{post_id}/likes"
+    };
+  }
 
   // Добавление комментария к посту
-  rpc AddComment(AddCommentRequest) returns (Comment);
+  rpc AddComment(AddCommentRequest) returns (Comment) {
+    option (google.api.http) = {
+      post : "/v1/posts/{post_id}/comments"
+      body : "*"
+    };
+  }
 
   // Удаление лайка
-  rpc RemoveLike(RemoveLikeRequest) returns (RemoveLikeResponse);
+  rpc RemoveLike(RemoveLikeRequest) returns (RemoveLikeResponse) {
+    option (google.api.http) = {
+      delete : "/v1/posts/{post_id}/likes"
+    };
+  }
 
   // Удаление комментария
-  rpc RemoveComment(RemoveCommentRequest) returns (RemoveCommentResponse);
+  rpc RemoveComment(RemoveCommentRequest) returns (RemoveCommentResponse) {
+    option (google.api.http) = {
+      delete : "/v1/posts/comments/{comment_id}"
+    };
+  }
 
   // Получение списка комментариев
-  rpc GetComments(PostId) returns (GetCommentsResponse);
+  rpc GetComments(PostId) returns (GetCommentsResponse) {
+    option (google.api.http) = {
+      get : "/v1/posts/{post_id}/comments"
+    };
+  }
 }
 
 // Кастомное определение геопозиции
