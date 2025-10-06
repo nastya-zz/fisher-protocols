@@ -32,6 +32,7 @@ type AuthV1Client interface {
 	BlockUser(ctx context.Context, in *BlockUserRequest, opts ...grpc.CallOption) (*BlockUserResponse, error)
 	DeleteUser(ctx context.Context, in *BlockUserRequest, opts ...grpc.CallOption) (*BlockUserResponse, error)
 	UpdateUserRole(ctx context.Context, in *UpdateUserRoleRequest, opts ...grpc.CallOption) (*UpdateUserRoleResponse, error)
+	ValidateToken(ctx context.Context, in *ValidateTokenRequest, opts ...grpc.CallOption) (*ValidateTokenResponse, error)
 }
 
 type authV1Client struct {
@@ -123,6 +124,15 @@ func (c *authV1Client) UpdateUserRole(ctx context.Context, in *UpdateUserRoleReq
 	return out, nil
 }
 
+func (c *authV1Client) ValidateToken(ctx context.Context, in *ValidateTokenRequest, opts ...grpc.CallOption) (*ValidateTokenResponse, error) {
+	out := new(ValidateTokenResponse)
+	err := c.cc.Invoke(ctx, "/auth_v1.AuthV1/ValidateToken", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AuthV1Server is the server API for AuthV1 service.
 // All implementations must embed UnimplementedAuthV1Server
 // for forward compatibility
@@ -136,6 +146,7 @@ type AuthV1Server interface {
 	BlockUser(context.Context, *BlockUserRequest) (*BlockUserResponse, error)
 	DeleteUser(context.Context, *BlockUserRequest) (*BlockUserResponse, error)
 	UpdateUserRole(context.Context, *UpdateUserRoleRequest) (*UpdateUserRoleResponse, error)
+	ValidateToken(context.Context, *ValidateTokenRequest) (*ValidateTokenResponse, error)
 	mustEmbedUnimplementedAuthV1Server()
 }
 
@@ -169,6 +180,9 @@ func (UnimplementedAuthV1Server) DeleteUser(context.Context, *BlockUserRequest) 
 }
 func (UnimplementedAuthV1Server) UpdateUserRole(context.Context, *UpdateUserRoleRequest) (*UpdateUserRoleResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateUserRole not implemented")
+}
+func (UnimplementedAuthV1Server) ValidateToken(context.Context, *ValidateTokenRequest) (*ValidateTokenResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ValidateToken not implemented")
 }
 func (UnimplementedAuthV1Server) mustEmbedUnimplementedAuthV1Server() {}
 
@@ -345,6 +359,24 @@ func _AuthV1_UpdateUserRole_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AuthV1_ValidateToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ValidateTokenRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthV1Server).ValidateToken(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/auth_v1.AuthV1/ValidateToken",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthV1Server).ValidateToken(ctx, req.(*ValidateTokenRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // AuthV1_ServiceDesc is the grpc.ServiceDesc for AuthV1 service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -387,6 +419,10 @@ var AuthV1_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateUserRole",
 			Handler:    _AuthV1_UpdateUserRole_Handler,
+		},
+		{
+			MethodName: "ValidateToken",
+			Handler:    _AuthV1_ValidateToken_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
