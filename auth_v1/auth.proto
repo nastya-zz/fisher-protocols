@@ -60,6 +60,20 @@ service AuthV1 {
       body : "*"
     };
   }
+
+  rpc ValidateToken(ValidateTokenRequest) returns (ValidateTokenResponse);
+}
+
+message Claims {
+  string id = 1;
+  string role = 2;
+}
+
+message ValidateTokenRequest {
+  string token = 1;
+}
+message ValidateTokenResponse {
+  Claims claims = 1;
 }
 
 enum Role {
