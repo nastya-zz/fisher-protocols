@@ -1,4 +1,4 @@
-module protos
+module github.com/nastya-zz/fisher-protocols
 
 go 1.24.0
 
