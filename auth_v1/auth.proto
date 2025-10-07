@@ -26,6 +26,13 @@ service AuthV1 {
       body : "*"
     };
   }
+
+  rpc Logout(LogoutRequest) returns (LogoutResponse) {
+    option (google.api.http) = {
+      get : "/v1/auth/logout"
+    };
+  }
+
   rpc GetRefreshToken(GetRefreshTokenRequest)
       returns (GetRefreshTokenResponse) {
     option (google.api.http) = {
@@ -69,12 +76,8 @@ message Claims {
   string role = 2;
 }
 
-message ValidateTokenRequest {
-  string token = 1;
-}
-message ValidateTokenResponse {
-  Claims claims = 1;
-}
+message ValidateTokenRequest { string token = 1; }
+message ValidateTokenResponse { Claims claims = 1; }
 
 enum Role {
   ADMIN = 0;
@@ -116,6 +119,9 @@ message CheckRequest { string endpoint_address = 1; }
 
 message BlockUserRequest { string id = 1; }
 message BlockUserResponse { string id = 1; }
+
+message LogoutRequest { string refresh_token = 1; }
+message LogoutResponse { bool success = 1; }
 
 message UpdateUserRequest {
   UserInfo user_info = 1;
