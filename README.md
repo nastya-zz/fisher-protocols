@@ -122,3 +122,22 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 
 - Go 1.24+
 - protoc (Protocol Buffers compiler)
+
+### Версионирование
+
+```bash
+# Узнать следующую версию (на основе conventional commits)
+svu next
+
+# Создать тег автоматически
+git tag $(svu next)
+git push --tags
+
+# Узнать текущую версию
+svu current
+
+# Конкретный bump
+svu major  # 1.0.0 -> 2.0.0
+svu minor  # 1.0.0 -> 1.1.0
+svu patch  # 1.0.0 -> 1.0.1
+```
