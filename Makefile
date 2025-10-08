@@ -17,6 +17,7 @@ generate:
 	make generate-auth-api
 	make generate-user-api
 	make generate-post-api
+	make generate-feed-api
 
 GOOGLEAPIS_PATH:=$(CURDIR)/third_party/googleapis
 
@@ -55,3 +56,15 @@ generate-post-api:
 	--grpc-gateway_out=gen/post_v1 --grpc-gateway_opt=paths=source_relative \
 	--plugin=protoc-gen-grpc-gateway=bin/protoc-gen-grpc-gateway \
 	post_v1/post.proto
+
+generate-feed-api:
+	mkdir -p gen/feed_v1
+	protoc --proto_path feed_v1 \
+	--proto_path=$(GOOGLEAPIS_PATH) \
+	--go_out=gen/feed_v1 --go_opt=paths=source_relative \
+	--plugin=protoc-gen-go=bin/protoc-gen-go \
+	--go-grpc_out=gen/feed_v1 --go-grpc_opt=paths=source_relative \
+	--plugin=protoc-gen-go-grpc=bin/protoc-gen-go-grpc \
+	--grpc-gateway_out=gen/feed_v1 --grpc-gateway_opt=paths=source_relative \
+	--plugin=protoc-gen-grpc-gateway=bin/protoc-gen-grpc-gateway \
+	feed_v1/feed.proto
