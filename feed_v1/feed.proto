@@ -1,0 +1,214 @@
+syntax = "proto3";
+
+package feed_v1;
+
+option go_package = "protos/feed_v1/feed.proto;feed_v1";
+
+import "google/protobuf/timestamp.proto";
+import "google/api/annotations.proto";
+
+// Сервис для формирования ленты постов
+service FeedV1 {
+  // Получение персональной ленты подписок пользователя
+  rpc GetFeed(GetFeedRequest) returns (GetFeedResponse) {
+    option (google.api.http) = {
+      get : "/v1/feed"
+    };
+  }
+
+  // Получение ленты постов по геолокации (рыбные места рядом)
+  rpc GetLocationFeed(GetLocationFeedRequest) returns (GetFeedResponse) {
+    option (google.api.http) = {
+      post : "/v1/feed/location"
+      body : "*"
+    };
+  }
+
+  // Получение трендовых постов (популярное в регионе/мире)
+  rpc GetTrendingFeed(GetTrendingFeedRequest) returns (GetFeedResponse) {
+    option (google.api.http) = {
+      get : "/v1/feed/trending"
+    };
+  }
+
+  // Обновление кэша ленты пользователя (внутренний метод)
+  rpc RefreshUserFeed(RefreshUserFeedRequest) returns (RefreshUserFeedResponse);
+
+  // Обработка события создания поста (внутренний метод для event-driven)
+  rpc OnPostCreated(PostCreatedEvent) returns (PostCreatedEventResponse);
+
+  // Получение рекомендаций на основе интересов пользователя
+  rpc GetRecommendations(GetRecommendationsRequest) returns (GetFeedResponse) {
+    option (google.api.http) = {
+      get : "/v1/feed/recommendations"
+    };
+  }
+}
+
+// Основной объект поста в ленте
+message FeedPost {
+  string id = 1;
+  FeedUser author = 2;
+  string description = 3;
+  Location location = 4;
+  repeated FeedMedia media = 5;
+  int32 likes_count = 6;
+  int32 comments_count = 7;
+  repeated FishType fish_types = 8;
+  repeated TackleType tackle_types = 9;
+  google.protobuf.Timestamp created_at = 10;
+  bool is_liked_by_me = 11;    // Лайкнул ли текущий пользователь
+  double relevance_score = 12; // Релевантность для персонализации
+  int32 distance = 13;         // "2.5 км от вас" для геоленты
+}
+
+// Информация об авторе поста в ленте
+message FeedUser {
+  string id = 1;
+  string username = 2;
+  string avatar_url = 3;
+  bool is_verified = 4;
+  bool is_subscribed = 5; // Подписан ли текущий пользователь
+}
+
+// Медиа контент (упрощенная версия)
+message FeedMedia {
+  MediaType type = 1;
+  string url = 2;
+  string thumbnail_url = 3;
+  int32 width = 4;
+  int32 height = 5;
+}
+
+enum MediaType {
+  UNKNOWN = 0;
+  PHOTO = 1;
+  VIDEO = 2;
+}
+
+// Геолокация
+message Location {
+  double latitude = 1;
+  double longitude = 2;
+  string place_name = 3; // Название места (опционально)
+}
+
+// Вид рыбы
+message FishType {
+  string id = 1;
+  string name = 2;
+}
+
+// Тип снасти
+message TackleType {
+  string id = 1;
+  string name = 2;
+}
+
+// ============= ЗАПРОСЫ И ОТВЕТЫ =============
+
+// Запрос персональной ленты
+message GetFeedRequest {
+  string user_id = 1;
+  FeedFilters filters = 2;
+  Pagination pagination = 3;
+  SortOrder sort_order = 4;
+}
+
+// Запрос геолокационной ленты
+message GetLocationFeedRequest {
+  string user_id = 1;
+  Location center = 2;  // Центр поиска
+  double radius_km = 3; // Радиус в километрах
+  FeedFilters filters = 4;
+  Pagination pagination = 5;
+}
+
+// Запрос трендовой ленты
+message GetTrendingFeedRequest {
+  string user_id = 1;
+  TrendingScope scope = 2; // Регион или глобально
+  TrendingPeriod period = 3;
+  Pagination pagination = 4;
+}
+
+// Запрос рекомендаций
+message GetRecommendationsRequest {
+  string user_id = 1;
+  Pagination pagination = 2;
+}
+
+// Ответ с постами
+message GetFeedResponse {
+  repeated FeedPost posts = 1;
+  Pagination pagination = 2;
+  bool has_more = 3;
+  string next_cursor = 4; // Cursor для следующей страницы
+}
+
+// Фильтры для ленты
+message FeedFilters {
+  repeated string fish_type_ids = 1;   // Фильтр по видам рыбы
+  repeated string tackle_type_ids = 2; // Фильтр по снастям
+  DateRange date_range = 3;            // Временной диапазон
+  bool only_with_media = 4;            // Только с фото/видео
+  MediaType media_type_filter = 5;     // Только фото или видео
+}
+
+// Пагинация
+message Pagination {
+  int32 limit = 1;   // Количество постов на странице
+  int32 offset = 2;  // Смещение (для offset-based)
+  string cursor = 3; // Курсор (для cursor-based)
+}
+
+// Порядок сортировки
+enum SortOrder {
+  RECENT = 0;   // По дате создания (новые первыми)
+  POPULAR = 1;  // По популярности (лайки + комментарии)
+  RELEVANT = 2; // По релевантности (ML алгоритм)
+  NEARBY = 3;   // По близости к геолокации
+}
+
+// Область трендов
+enum TrendingScope {
+  GLOBAL = 0;   // Глобально по всему приложению
+  REGIONAL = 1; // По региону пользователя
+  COUNTRY = 2;  // По стране
+}
+
+// Период для трендов
+enum TrendingPeriod {
+  TODAY = 0;
+  WEEK = 1;
+  MONTH = 2;
+}
+
+// Диапазон дат
+message DateRange {
+  google.protobuf.Timestamp start = 1;
+  google.protobuf.Timestamp end = 2;
+}
+
+// ============= ВНУТРЕННИЕ МЕТОДЫ =============
+
+// Обновление кэша ленты
+message RefreshUserFeedRequest { string user_id = 1; }
+
+message RefreshUserFeedResponse {
+  bool success = 1;
+  int32 posts_cached = 2;
+}
+
+// События создания поста (для event-driven архитектуры)
+message PostCreatedEvent {
+  string post_id = 1;
+  string author_id = 2;
+  google.protobuf.Timestamp created_at = 3;
+  repeated string subscriber_ids = 4; // Для fan-out on write
+}
+
+message PostCreatedEventResponse {
+  bool success = 1;
+  int32 feeds_updated = 2;
+}
