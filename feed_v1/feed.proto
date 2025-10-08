@@ -108,35 +108,33 @@ message TackleType {
 // ============= ЗАПРОСЫ И ОТВЕТЫ =============
 
 // Запрос персональной ленты
+// user_id берется из JWT токена через grpc-gateway metadata
 message GetFeedRequest {
-  string user_id = 1;
-  FeedFilters filters = 2;
-  Pagination pagination = 3;
-  SortOrder sort_order = 4;
+  FeedFilters filters = 1;
+  Pagination pagination = 2;
+  SortOrder sort_order = 3;
 }
 
 // Запрос геолокационной ленты
+// user_id берется из JWT токена через grpc-gateway metadata
 message GetLocationFeedRequest {
-  string user_id = 1;
-  Location center = 2;  // Центр поиска
-  double radius_km = 3; // Радиус в километрах
-  FeedFilters filters = 4;
-  Pagination pagination = 5;
-}
-
-// Запрос трендовой ленты
-message GetTrendingFeedRequest {
-  string user_id = 1;
-  TrendingScope scope = 2; // Регион или глобально
-  TrendingPeriod period = 3;
+  Location center = 1;  // Центр поиска
+  double radius_km = 2; // Радиус в километрах
+  FeedFilters filters = 3;
   Pagination pagination = 4;
 }
 
-// Запрос рекомендаций
-message GetRecommendationsRequest {
-  string user_id = 1;
-  Pagination pagination = 2;
+// Запрос трендовой ленты
+// user_id берется из JWT токена через grpc-gateway metadata
+message GetTrendingFeedRequest {
+  TrendingScope scope = 1; // Регион или глобально
+  TrendingPeriod period = 2;
+  Pagination pagination = 3;
 }
+
+// Запрос рекомендаций
+// user_id берется из JWT токена через grpc-gateway metadata
+message GetRecommendationsRequest { Pagination pagination = 1; }
 
 // Ответ с постами
 message GetFeedResponse {

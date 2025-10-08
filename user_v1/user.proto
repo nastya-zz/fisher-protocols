@@ -34,7 +34,7 @@ service UserV1 {
   }
   rpc ResetSettings(ResetSettingsRequest) returns (ResetSettingsResponse) {
     option (google.api.http) = {
-      post : "/v1/users/{user_id}/settings/reset"
+      post : "/v1/users/settings/reset"
     };
   }
   rpc GetSubscriptions(GetSubscriptionsRequest)
@@ -45,12 +45,12 @@ service UserV1 {
   }
   rpc Subscribe(SubscribeRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
-      post : "/v1/users/{user_id}/subscribe/{subscription_id}"
+      post : "/v1/users/subscribe/{subscription_id}"
     };
   }
   rpc UnSubscribe(SubscribeRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
-      delete : "/v1/users/{user_id}/subscribe/{subscription_id}"
+      delete : "/v1/users/subscribe/{subscription_id}"
     };
   }
   rpc UploadAvatar(UploadAvatarRequest) returns (UploadAvatarResponse) {
@@ -61,7 +61,7 @@ service UserV1 {
   }
   rpc RemoveAvatar(RemoveAvatarRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
-      delete : "/v1/users/{userId}/avatar"
+      delete : "/v1/users/avatar"
     };
   }
 }
@@ -80,13 +80,13 @@ message UserProfile {
 message GetProfileRequest { string id = 1; }
 message GetProfileResponse { UserProfile profile = 1; }
 
+// user_id берется из JWT токена через grpc-gateway metadata
 message UpdateProfile {
-  string id = 1;
-  google.protobuf.StringValue name = 2;
-  google.protobuf.StringValue email = 3;
-  google.protobuf.StringValue bio = 4;
-  google.protobuf.StringValue avatar_path = 5;
-  google.protobuf.BoolValue is_public = 6;
+  google.protobuf.StringValue name = 1;
+  google.protobuf.StringValue email = 2;
+  google.protobuf.StringValue bio = 3;
+  google.protobuf.StringValue avatar_path = 4;
+  google.protobuf.BoolValue is_public = 5;
 }
 message UpdateProfileRequest { UpdateProfile info = 1; }
 message UpdateProfileResponse { UserProfile profile = 1; }
@@ -102,10 +102,8 @@ message GetSubscriptionsResponse {
   repeated SubscriptionUser subscribers = 2;
 }
 
-message SubscribeRequest {
-  string user_id = 1;
-  string subscription_id = 2;
-}
+// user_id берется из JWT токена через grpc-gateway metadata
+message SubscribeRequest { string subscription_id = 1; }
 
 enum Language {
   RU = 0;
@@ -121,23 +119,20 @@ message AccountSettings {
 }
 message GetSettingsRequest { string id = 1; }
 message GetSettingsResponse { AccountSettings settings = 1; }
-message UpdateSettingsRequest {
-  string user_id = 1;
-  AccountSettings settings_info = 2;
-}
+// user_id берется из JWT токена через grpc-gateway metadata
+message UpdateSettingsRequest { AccountSettings settings_info = 1; }
 message UpdateSettingsResponse { AccountSettings settings = 1; }
-message ResetSettingsRequest { string user_id = 1; }
+// user_id берется из JWT токена через grpc-gateway metadata
+message ResetSettingsRequest {}
 message ResetSettingsResponse { AccountSettings settings = 1; }
 
+// userId берется из JWT токена через grpc-gateway metadata
 message UploadAvatarRequest {
   bytes image = 1;
   string filename = 2;
-  string userId = 3;
 }
 
 message UploadAvatarResponse { string link = 1; }
 
-message RemoveAvatarRequest {
-  string userId = 1;
-  string filename = 2;
-}
+// userId берется из JWT токена через grpc-gateway metadata
+message RemoveAvatarRequest { string filename = 1; }

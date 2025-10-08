@@ -197,13 +197,13 @@ message UploadMediaRequest {
 message UploadMediaResponse { string id = 1; }
 
 // Запросы
+// user_id берется из JWT токена через grpc-gateway metadata
 message CreatePostRequest {
-  string user_id = 1;
-  string description = 2;
-  LatLng location = 3;
-  repeated string media = 4;
-  repeated int32 fish_type_ids = 5;   // Опциональные ID видов рыбы
-  repeated int32 tackle_type_ids = 6; // Опциональные ID снастей
+  string description = 1;
+  LatLng location = 2;
+  repeated string media = 3;
+  repeated int32 fish_type_ids = 4;   // Опциональные ID видов рыбы
+  repeated int32 tackle_type_ids = 5; // Опциональные ID снастей
 }
 
 message GetPostRequest { string id = 1; }
@@ -222,26 +222,24 @@ message DeletePostRequest { string id = 1; }
 
 message DeletePostResponse { bool success = 1; }
 
-message AddLikeRequest {
-  string user_id = 1;
-  string post_id = 2;
-}
+// user_id берется из JWT токена через grpc-gateway metadata
+message AddLikeRequest { string post_id = 1; }
 
 message AddLikeResponse {
   int32 likes_count = 1;
   bool success = 2;
 }
 
+// user_id берется из JWT токена через grpc-gateway metadata
 message AddCommentRequest {
-  string user_id = 1;
-  string post_id = 2;
-  string content = 3;
+  string post_id = 1;
+  string content = 2;
 }
 
 // Запрос на удаление лайка
+// user_id берется из JWT токена через grpc-gateway metadata
 message RemoveLikeRequest {
-  string user_id = 1; // ID пользователя, удаляющего лайк
-  string post_id = 2; // ID поста
+  string post_id = 1; // ID поста
 }
 
 message RemoveLikeResponse {
@@ -250,9 +248,9 @@ message RemoveLikeResponse {
 }
 
 // Запрос на удаление комментария
+// user_id берется из JWT токена через grpc-gateway metadata
 message RemoveCommentRequest {
   string comment_id = 1; // ID комментария
-  string user_id = 2;    // ID пользователя, инициирующего удаление
 }
 
 message RemoveCommentResponse {
