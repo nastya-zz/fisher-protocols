@@ -174,14 +174,14 @@ message Comment {
 
 // Вид рыбы
 message FishType {
-  string id = 1;
+  int32 id = 1;
   string name = 2; // Название вида (e.g. "Щука", "Карп")
   string description = 3;
 }
 
 // Тип снасти
 message TackleType {
-  string id = 1;
+  int32 id = 1;
   string name = 2;        // Название снасти (e.g. "Спиннинг", "Фидер")
   string description = 3; // Категория (e.g. "Удочка", "Приманка")
 }
