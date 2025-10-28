@@ -132,7 +132,7 @@ var filter_PostService_GetPosts_0 = &utilities.DoubleArray{Encoding: map[string]
 
 func request_PostService_GetPosts_0(ctx context.Context, marshaler runtime.Marshaler, client PostServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq GetPostRequest
+		protoReq GetPostsRequest
 		metadata runtime.ServerMetadata
 	)
 	if req.Body != nil {
@@ -150,7 +150,7 @@ func request_PostService_GetPosts_0(ctx context.Context, marshaler runtime.Marsh
 
 func local_request_PostService_GetPosts_0(ctx context.Context, marshaler runtime.Marshaler, server PostServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq GetPostRequest
+		protoReq GetPostsRequest
 		metadata runtime.ServerMetadata
 	)
 	if err := req.ParseForm(); err != nil {

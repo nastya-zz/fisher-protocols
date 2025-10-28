@@ -33,7 +33,7 @@ service PostService {
   }
 
   // Получение спасика постов по ID
-  rpc GetPosts(GetPostRequest) returns (GetPostsResponse) {
+  rpc GetPosts(GetPostsRequest) returns (GetPostsResponse) {
     option (google.api.http) = {
       get : "/v1/posts"
     };
@@ -209,6 +209,8 @@ message CreatePostRequest {
 message GetPostRequest { string id = 1; }
 
 message GetPostsResponse { repeated Post posts = 1; }
+
+message GetPostsRequest { string user_id = 1; }
 
 message UpdatePostRequest {
   string id = 1;

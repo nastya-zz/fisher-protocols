@@ -29,7 +29,7 @@ type PostServiceClient interface {
 	// Получение поста по ID
 	GetPost(ctx context.Context, in *GetPostRequest, opts ...grpc.CallOption) (*Post, error)
 	// Получение спасика постов по ID
-	GetPosts(ctx context.Context, in *GetPostRequest, opts ...grpc.CallOption) (*GetPostsResponse, error)
+	GetPosts(ctx context.Context, in *GetPostsRequest, opts ...grpc.CallOption) (*GetPostsResponse, error)
 	// Обновление поста
 	UpdatePost(ctx context.Context, in *UpdatePostRequest, opts ...grpc.CallOption) (*Post, error)
 	// Удаление поста
@@ -83,7 +83,7 @@ func (c *postServiceClient) GetPost(ctx context.Context, in *GetPostRequest, opt
 	return out, nil
 }
 
-func (c *postServiceClient) GetPosts(ctx context.Context, in *GetPostRequest, opts ...grpc.CallOption) (*GetPostsResponse, error) {
+func (c *postServiceClient) GetPosts(ctx context.Context, in *GetPostsRequest, opts ...grpc.CallOption) (*GetPostsResponse, error) {
 	out := new(GetPostsResponse)
 	err := c.cc.Invoke(ctx, "/post_v1.PostService/GetPosts", in, out, opts...)
 	if err != nil {
@@ -175,7 +175,7 @@ type PostServiceServer interface {
 	// Получение поста по ID
 	GetPost(context.Context, *GetPostRequest) (*Post, error)
 	// Получение спасика постов по ID
-	GetPosts(context.Context, *GetPostRequest) (*GetPostsResponse, error)
+	GetPosts(context.Context, *GetPostsRequest) (*GetPostsResponse, error)
 	// Обновление поста
 	UpdatePost(context.Context, *UpdatePostRequest) (*Post, error)
 	// Удаление поста
@@ -208,7 +208,7 @@ func (UnimplementedPostServiceServer) UploadMedia(context.Context, *UploadMediaR
 func (UnimplementedPostServiceServer) GetPost(context.Context, *GetPostRequest) (*Post, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetPost not implemented")
 }
-func (UnimplementedPostServiceServer) GetPosts(context.Context, *GetPostRequest) (*GetPostsResponse, error) {
+func (UnimplementedPostServiceServer) GetPosts(context.Context, *GetPostsRequest) (*GetPostsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetPosts not implemented")
 }
 func (UnimplementedPostServiceServer) UpdatePost(context.Context, *UpdatePostRequest) (*Post, error) {
@@ -303,7 +303,7 @@ func _PostService_GetPost_Handler(srv interface{}, ctx context.Context, dec func
 }
 
 func _PostService_GetPosts_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetPostRequest)
+	in := new(GetPostsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -315,7 +315,7 @@ func _PostService_GetPosts_Handler(srv interface{}, ctx context.Context, dec fun
 		FullMethod: "/post_v1.PostService/GetPosts",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PostServiceServer).GetPosts(ctx, req.(*GetPostRequest))
+		return srv.(PostServiceServer).GetPosts(ctx, req.(*GetPostsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
