@@ -28,7 +28,7 @@ type PostServiceClient interface {
 	UploadMedia(ctx context.Context, in *UploadMediaRequest, opts ...grpc.CallOption) (*UploadMediaResponse, error)
 	// Получение поста по ID
 	GetPost(ctx context.Context, in *GetPostRequest, opts ...grpc.CallOption) (*Post, error)
-	// Получение спасика постов по ID
+	// Получение списка постов по ID
 	GetPosts(ctx context.Context, in *GetPostsRequest, opts ...grpc.CallOption) (*GetPostsResponse, error)
 	// Обновление поста
 	UpdatePost(ctx context.Context, in *UpdatePostRequest, opts ...grpc.CallOption) (*Post, error)
@@ -174,7 +174,7 @@ type PostServiceServer interface {
 	UploadMedia(context.Context, *UploadMediaRequest) (*UploadMediaResponse, error)
 	// Получение поста по ID
 	GetPost(context.Context, *GetPostRequest) (*Post, error)
-	// Получение спасика постов по ID
+	// Получение списка постов по ID
 	GetPosts(context.Context, *GetPostsRequest) (*GetPostsResponse, error)
 	// Обновление поста
 	UpdatePost(context.Context, *UpdatePostRequest) (*Post, error)

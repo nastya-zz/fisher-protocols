@@ -5,7 +5,7 @@ import "google/api/annotations.proto";
 
 package post_v1;
 
-option go_package = "protos/post_v1/user.proto;post_v1";
+option go_package = "protos/post_v1/post.proto;post_v1";
 
 // Сервис для работы с постами
 service PostService {
@@ -32,7 +32,7 @@ service PostService {
     };
   }
 
-  // Получение спасика постов по ID
+  // Получение списка постов по ID
   rpc GetPosts(GetPostsRequest) returns (GetPostsResponse) {
     option (google.api.http) = {
       get : "/v1/posts"
