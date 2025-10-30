@@ -110,9 +110,9 @@ message TackleType {
 // Запрос персональной ленты
 // user_id берется из JWT токена через grpc-gateway metadata
 message GetFeedRequest {
-  FeedFilters filters = 1;
-  Pagination pagination = 2;
-  SortOrder sort_order = 3;
+  // FeedFilters filters = 1;
+  Pagination pagination = 1;
+  // SortOrder sort_order = 3;
 }
 
 // Запрос геолокационной ленты
@@ -138,10 +138,9 @@ message GetRecommendationsRequest { Pagination pagination = 1; }
 
 // Ответ с постами
 message GetFeedResponse {
-  repeated FeedPost posts = 1;
-  Pagination pagination = 2;
-  bool has_more = 3;
-  string next_cursor = 4; // Cursor для следующей страницы
+  repeated string post_ids = 1;
+  bool has_more = 2;
+  string next_cursor = 3; // Cursor для следующей страницы
 }
 
 // Фильтры для ленты
